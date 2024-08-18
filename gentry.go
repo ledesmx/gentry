@@ -16,7 +16,6 @@ const Script_Extension = ".sh"
 func manage_error(err error) {
 	if err != nil {
 		log.Fatal(err)
-		return
 	}
 }
 
@@ -60,9 +59,8 @@ func main() {
 		),
 	)
 
-	if err := form.Run(); err != nil {
-		log.Fatal(err)
-	}
+	error := form.Run()
+	manage_error(error)
 
 	fmt.Printf("Your selection is %s", script_selected)
 }
