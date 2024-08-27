@@ -13,7 +13,7 @@ import (
 
 const Script_Extension = ".sh"
 
-func manage_error(err error) {
+func if_error_exit(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -40,13 +40,13 @@ func main() {
 	var script_selected string
 
 	root, err := os.Getwd()
-	manage_error(err)
+	if_error_exit(err)
 
 	files, err := os.ReadDir(root)
-	manage_error(err)
+	if_error_exit(err)
 
 	scripts, err := get_scripts(files, root)
-	manage_error(err)
+	if_error_exit(err)
 
 	form := huh.NewForm(
 		huh.NewGroup(
@@ -60,7 +60,7 @@ func main() {
 	)
 
 	error := form.Run()
-	manage_error(error)
+	if_error_exit(error)
 
 	fmt.Printf("Your selection is %s", script_selected)
 }
