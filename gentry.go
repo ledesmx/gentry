@@ -43,7 +43,7 @@ func main() {
 		comment         string
 		version         string
 		// exec            string
-		// terminal        bool
+		terminal string
 		// program_type    string
 		// categories      string
 	)
@@ -86,6 +86,13 @@ func main() {
 			huh.NewInput().
 				Title("Version").
 				Value(&version),
+			huh.NewSelect[string]().
+				Title("Terminal *").
+				Options(
+					huh.NewOption("true", "true"),
+					huh.NewOption("false", "false"),
+				).
+				Value(&terminal),
 		),
 	)
 
@@ -96,4 +103,5 @@ func main() {
 	fmt.Printf("Program name %s\n", name)
 	fmt.Printf("Comment %s\n", comment)
 	fmt.Printf("Version %s\n", version)
+	fmt.Printf("Terminal %s\n", terminal)
 }
