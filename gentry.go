@@ -41,7 +41,7 @@ func main() {
 		script_selected string
 		name            string
 		comment         string
-		// version         float64
+		version         string
 		// exec            string
 		// terminal        bool
 		// program_type    string
@@ -60,13 +60,13 @@ func main() {
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().
-				Title("Choose the script file").
+				Title("Choose the script file *").
 				Options(
 					huh.NewOptions[string](scripts...)...,
 				).
 				Value(&script_selected),
 			huh.NewInput().
-				Title("Program name").
+				Title("Program name *").
 				Value(&name).
 				Validate(func(str string) error {
 					if len(str) == 0 {
@@ -75,7 +75,7 @@ func main() {
 					return nil
 				}),
 			huh.NewInput().
-				Title("Comment").
+				Title("Comment *").
 				Value(&comment).
 				Validate(func(str string) error {
 					if len(str) == 0 {
@@ -83,10 +83,9 @@ func main() {
 					}
 					return nil
 				}),
-			// huh.NewInput().
-			// 	Title("Version").
-			// 	Value(&version).
-			// 	Validate(),
+			huh.NewInput().
+				Title("Version").
+				Value(&version),
 		),
 	)
 
@@ -96,4 +95,5 @@ func main() {
 	fmt.Printf("Your selection is %s\n", script_selected)
 	fmt.Printf("Program name %s\n", name)
 	fmt.Printf("Comment %s\n", comment)
+	fmt.Printf("Version %s\n", version)
 }
