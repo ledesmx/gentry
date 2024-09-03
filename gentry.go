@@ -7,11 +7,13 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/charmbracelet/huh"
 )
 
 const Script_Extension = ".sh"
+const Entry_Path = "/usr/share/applications"
 
 var Categories = []string{
 	"AudioVideo",
@@ -52,16 +54,22 @@ func get_scripts(files []fs.DirEntry, path string) ([]string, error) {
 	return scripts, nil
 }
 
+func format_categories(categories []string) string {
+	var cats string
+	for i := 0; i < len(categories); i++ {
+		cats += fmt.Sprintf("%v;", categories[i])
+	}
+	return cats
+}
+
 func main() {
 	var (
 		script_selected string
 		name            string
 		comment         string
 		version         string
-		// exec            string
-		terminal string
-		// program_type    string
-		categories []string
+		terminal        string
+		categories_list []string
 	)
 
 	root, err := os.Getwd()
@@ -70,13 +78,17 @@ func main() {
 	files, err := os.ReadDir(root)
 	if_error_exit(err)
 
+	// for i := 0; i < len(files); i++ {
+	// 	fmt.Println(files[i])
+	// }
+
 	scripts, err := get_scripts(files, root)
 	if_error_exit(err)
 
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().
-				Title("Choose the script file *").
+				Title("Script file *").
 				Options(
 					huh.NewOptions(scripts...)...,
 				).
@@ -114,21 +126,29 @@ func main() {
 				Options(
 					huh.NewOptions(Categories...)...,
 				).
-				Value(&categories),
+				Value(&categories_list),
 		),
 	)
 
 	error := form.Run()
 	if_error_exit(error)
 
-	fmt.Printf("Your selection is %s\n", script_selected)
-	fmt.Printf("Program name %s\n", name)
-	fmt.Printf("Comment %s\n", comment)
-	fmt.Printf("Version %s\n", version)
-	fmt.Printf("Terminal %s\n", terminal)
-	fmt.Printf("Categories: ")
-	for i := 0; i < len(categories); i++ {
-		fmt.Printf("%v;", categories[i])
-	}
-	fmt.Printf("\n")
+	categories := format_categories(categories_list)
+	file_name, _ := strings.CutSuffix(script_selected, ".sh")
+	file := fmt.Sprintf("%s/gentry.%s.desktop", Entry_Path, file_name)
+
+	fmt.Printf("Generating the following desktop entry. \n")
+	fmt.Printf("%s \n\n", file)
+	fmt.Printf("############### \n")
+	fmt.Printf("[Desktop Entry] \n")
+	fmt.Printf("Type=Application \n")
+	fmt.Printf("Version=%s \n", version)
+	fmt.Printf("Name=%s \n", name)
+	fmt.Printf("Comment=%s \n", comment)
+	fmt.Printf("Path=%s \n", root)
+	fmt.Printf("Exec=%s \n", script_selected)
+	fmt.Printf("Terminal=%s \n", terminal)
+	fmt.Printf("Categories=%s \n", categories)
+	fmt.Printf("############## \n")
+
 }
