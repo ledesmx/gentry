@@ -78,10 +78,6 @@ func main() {
 	files, err := os.ReadDir(root)
 	if_error_exit(err)
 
-	// for i := 0; i < len(files); i++ {
-	// 	fmt.Println(files[i])
-	// }
-
 	scripts, err := get_scripts(files, root)
 	if_error_exit(err)
 
@@ -136,19 +132,26 @@ func main() {
 	categories := format_categories(categories_list)
 	file_name, _ := strings.CutSuffix(script_selected, ".sh")
 	file := fmt.Sprintf("%s/gentry.%s.desktop", Entry_Path, file_name)
+	var data string
 
 	fmt.Printf("Generating the following desktop entry. \n")
 	fmt.Printf("%s \n\n", file)
-	fmt.Printf("############### \n")
-	fmt.Printf("[Desktop Entry] \n")
-	fmt.Printf("Type=Application \n")
-	fmt.Printf("Version=%s \n", version)
-	fmt.Printf("Name=%s \n", name)
-	fmt.Printf("Comment=%s \n", comment)
-	fmt.Printf("Path=%s \n", root)
-	fmt.Printf("Exec=%s \n", script_selected)
-	fmt.Printf("Terminal=%s \n", terminal)
-	fmt.Printf("Categories=%s \n", categories)
-	fmt.Printf("############## \n")
+	data += fmt.Sprintf("[Desktop Entry]\n")
+	data += fmt.Sprintf("Type=Application\n")
+	data += fmt.Sprintf("Version=%s\n", version)
+	data += fmt.Sprintf("Name=%s\n", name)
+	data += fmt.Sprintf("Comment=%s\n", comment)
+	data += fmt.Sprintf("Path=%s\n", root)
+	data += fmt.Sprintf("Exec=%s\n", script_selected)
+	data += fmt.Sprintf("Terminal=%s\n", terminal)
+	data += fmt.Sprintf("Categories=%s\n", categories)
 
+	fmt.Printf("############### \n")
+	fmt.Printf("%s", data)
+	fmt.Printf("############### \n")
+
+	er := os.WriteFile(file, []byte(data), 0666)
+	if_error_exit(er)
+
+	fmt.Printf("\nDesktop Entry generated successfully.")
 }
