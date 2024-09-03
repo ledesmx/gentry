@@ -13,6 +13,22 @@ import (
 
 const Script_Extension = ".sh"
 
+var Categories = []string{
+	"AudioVideo",
+	"Audio",
+	"Video",
+	"Development",
+	"Education",
+	"Game",
+	"Graphics",
+	"Network",
+	"Office",
+	"Science",
+	"Settings",
+	"System",
+	"Utility",
+}
+
 func if_error_exit(err error) {
 	if err != nil {
 		log.Fatal(err)
@@ -45,7 +61,7 @@ func main() {
 		// exec            string
 		terminal string
 		// program_type    string
-		// categories      string
+		categories []string
 	)
 
 	root, err := os.Getwd()
@@ -62,7 +78,7 @@ func main() {
 			huh.NewSelect[string]().
 				Title("Choose the script file *").
 				Options(
-					huh.NewOptions[string](scripts...)...,
+					huh.NewOptions(scripts...)...,
 				).
 				Value(&script_selected),
 			huh.NewInput().
@@ -93,6 +109,12 @@ func main() {
 					huh.NewOption("false", "false"),
 				).
 				Value(&terminal),
+			huh.NewMultiSelect[string]().
+				Title("Categories").
+				Options(
+					huh.NewOptions(Categories...)...,
+				).
+				Value(&categories),
 		),
 	)
 
@@ -104,4 +126,9 @@ func main() {
 	fmt.Printf("Comment %s\n", comment)
 	fmt.Printf("Version %s\n", version)
 	fmt.Printf("Terminal %s\n", terminal)
+	fmt.Printf("Categories: ")
+	for i := 0; i < len(categories); i++ {
+		fmt.Printf("%v;", categories[i])
+	}
+	fmt.Printf("\n")
 }
