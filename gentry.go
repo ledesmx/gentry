@@ -141,8 +141,7 @@ func main() {
 	data += fmt.Sprintf("Version=%s\n", version)
 	data += fmt.Sprintf("Name=%s\n", name)
 	data += fmt.Sprintf("Comment=%s\n", comment)
-	data += fmt.Sprintf("Path=%s\n", root)
-	data += fmt.Sprintf("Exec=%s\n", script_selected)
+	data += fmt.Sprintf("Exec=%s/%s\n", root, script_selected)
 	data += fmt.Sprintf("Terminal=%s\n", terminal)
 	data += fmt.Sprintf("Categories=%s\n", categories)
 
